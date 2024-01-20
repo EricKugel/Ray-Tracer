@@ -19,7 +19,7 @@ public class SphereComponent implements SceneComponent {
 
     public Intersection intersect(Ray ray) {
         Vector3 l = this.center.sub(ray.origin);
-        double t_center = Vector3.dot(l, ray.dir);
+        double t_center = l.dot(ray.dir);
         if (t_center < 0) {
             return null;
         }

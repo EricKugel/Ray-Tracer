@@ -15,7 +15,7 @@ public class Ray {
 
     public int doYoThang(Scene scene) {
         Color color = Color.WHITE;
-        for (SceneComponent comp : scene.components) {
+        for (SceneComponent comp : scene) {
             Intersection intersection = comp.intersect(this);
             if (intersection != null) {
                 color = Color.BLACK;

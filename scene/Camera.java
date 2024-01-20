@@ -11,7 +11,9 @@ public class Camera {
 
     public static final double VIEWPORT_HEIGHT = 2;
     public static final double VIEWPORT_WIDTH = VIEWPORT_HEIGHT * SCREEN_WIDTH / SCREEN_HEIGHT;
-    public static final double FOCAL_LENGTH = 1;
+    public static final double FOCAL_LENGTH = 5;
+
+    public static final Vector3 ORIGINAL_DIR = new Vector3(0, 0, 1);
 
     public Vector3 origin;
     public Vector3 dir;
@@ -30,18 +32,20 @@ public class Camera {
 
         Vector3 viewportU = new Vector3(VIEWPORT_WIDTH, 0, 0);
         Vector3 viewportV = new Vector3(0, -VIEWPORT_HEIGHT, 0);
-
+        
+        Matrix rotationMatrix = ORIGINAL_DIR.getRotationMatrix(dir);
+        viewportU = viewportU.rotate(rotationMatrix);
+        viewportV = viewportV.rotate(rotationMatrix);
+        
         pixelDeltaU = viewportU.mult(1.0 / SCREEN_WIDTH);
         pixelDeltaV = viewportV.mult(1.0 / SCREEN_HEIGHT);
 
-        Vector3 viewportUpperLeft = origin.add(new Vector3(0, 0, FOCAL_LENGTH))
-                                        .sub(viewportU.mult(.5))
-                                        .sub(viewportV.mult(.5));
+        Vector3 viewportUpperLeft = origin.add(new Vector3(0, 0, FOCAL_LENGTH).align(dir));
+        // viewportUpperLeft = viewportUpperLeft.align(dir);
+        viewportUpperLeft = viewportUpperLeft.sub(viewportU.mult(.5));
+        viewportUpperLeft = viewportUpperLeft.sub(viewportV.mult(.5));
+        
         firstPixelLocation = viewportUpperLeft.add(pixelDeltaU.add(pixelDeltaV).mult(.5));
-
-        firstPixelLocation.align(dir);
-        pixelDeltaU.align(dir);
-        pixelDeltaV.align(dir);
     }
 
     public BufferedImage getFrame(Scene scene) {
@@ -55,5 +59,8 @@ public class Camera {
             }
         }
         return image;
+    }
+
+    public static void main (String[] arg0) {
     }
 }

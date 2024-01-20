@@ -1,9 +1,15 @@
 package ray;
 
 public class Vector3 {
-    public double x;
-    public double y;
-    public double z;
+    public final double x;
+    public final double y;
+    public final double z;
+
+    public static final Vector3 i = new Vector3(1, 0, 0);
+    public static final Vector3 j = new Vector3(0, 1, 0);
+    public static final Vector3 k = new Vector3(0, 0, 1);
+
+    private double len = -1;
 
     public Vector3(double x, double y, double z) {
         this.x = x;
@@ -22,8 +28,12 @@ public class Vector3 {
         return output;
     }
 
-    public static double dot(Vector3 a, Vector3 b) {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
+    public double dot(Vector3 other) {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
+    public Vector3 cross(Vector3 other) {
+        return i.mult(y * other.z - z * other.y).sub(j.mult(x * other.z - z * other.x)).add(k.mult(x * other.y - y * other.x));
     }
 
     public Vector3 add(Vector3 other) {
@@ -31,7 +41,7 @@ public class Vector3 {
     }
 
     public Vector3 sub(Vector3 other) {
-        return add(other.mult(-1.0));
+        return add(other.mult(-1));
     }
 
     public Vector3 normalized() {
@@ -39,45 +49,44 @@ public class Vector3 {
     }
 
     public double len() {
-        return Math.sqrt(x * x + y * y + z * z);
+        if (this.len == -1) {
+            this.len = Math.sqrt(x * x + y * y + z * z);
+        }
+        return this.len;
     }
 
     public Vector3 mult(double scalar) {
-        Vector3 newVector = new Vector3(this.x, this.y, this.z);
-        newVector.x *= scalar;
-        newVector.y *= scalar;
-        newVector.z *= scalar;
-        return newVector;
+        return new Vector3(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
     public Vector3 rotateZ(double r) {
         Matrix m = new Matrix(new double[][] {
-            {Math.cos(r), -Math.sin(r), 0.0},
-            {Math.sin(r), Math.cos(r), 0.0},
-            {0.0, 0.0, 1.0}
+            {Math.cos(r), -Math.sin(r), 0},
+            {Math.sin(r), Math.cos(r), 0},
+            {0, 0, 1}
         });
         return rotate(m);
     }
 
     public Vector3 rotateY(double r) {
         Matrix m = new Matrix(new double[][] {
-            {Math.cos(r), 0.0, Math.sin(r)},
-            {0.0, 1.0, 0.0},
-            {-Math.sin(r), 0.0, Math.cos(0)}
+            {Math.cos(r), 0, Math.sin(r)},
+            {0, 1, 0},
+            {-Math.sin(r), 0, Math.cos(0)}
         });
         return rotate(m);
     }
 
     public Vector3 rotateX(double r) {
         Matrix m = new Matrix(new double[][] {
-            {1.0, 0.0, 0.0},
-            {0.0, Math.cos(r), -Math.sin(r)},
-            {0.0, Math.sin(r), Math.cos(r)}
+            {1, 0, 0},
+            {0, Math.cos(r), -Math.sin(r)},
+            {0, Math.sin(r), Math.cos(r)}
         });
         return rotate(m);
     }
 
-    private Vector3 rotate(Matrix m) {
+    public Vector3 rotate(Matrix m) {
         Matrix m1 = new Matrix(new double[][] {
             {x},
             {y},
@@ -92,25 +101,13 @@ public class Vector3 {
         return new Vector3(newMatrix.value[0][0], newMatrix.value[1][0], newMatrix.value[2][0]);
     }
 
-    public double rotZ() {
-        if (x == 0) {
-            return y > 0 ? Math.PI / 2 : 3 * Math.PI / 2;
-        }
-        return Math.atan(y / x) + (x < 0 ? Math.PI : 0);
-    }
+    public Matrix getRotationMatrix(Vector3 other) {
+        Vector3 a = this.normalized();
+        Vector3 b = other.normalized();
 
-    public double rotY() {
-        if (z == 0) {
-            return x > 0 ? Math.PI / 2 : 3 * Math.PI / 2;
-        }
-        return Math.atan(x / z) + (z < 0 ? Math.PI : 0);
-    }
-
-    public double rotX() {
-        if (y == 0) {
-            return z > 0 ? Math.PI / 2 : 3 * Math.PI / 2;
-        }
-        return Math.atan(z / y) + (y < 0 ? Math.PI : 0);
+        double rot = a.dot(b);
+        Vector3 normal = a.cross(b);
+        return new Quaternion(rot, normal.x, normal.y, normal.z).getRotationMatrix();        
     }
 
     public Vector3 rotateXYZ(double r1, double r2, double r3) {
@@ -118,11 +115,35 @@ public class Vector3 {
     }
 
     public Vector3 align(Vector3 other) {
-        return rotateXYZ(other.rotX(), other.rotY(), other.rotZ());
+        return other.mult(len() / other.len());
     }
 
     public static void main(String[] arg0) {
-        // Vector3 v = new Vector3(0.0, 1.0, 0.0);
-        // Vector3 newV = v.rotateZ(Math.PI);
+        Vector3 v = new Vector3(0, 1, 0);
+        Vector3 newV = v.rotateZ(Math.PI);
+        System.out.println(newV);
+    }
+
+    class Quaternion {
+        public double q0;
+        public double q1;
+        public double q2;
+        public double q3;
+    
+        public Quaternion(double q0, double q1, double q2, double q3) {
+            this.q0 = q0;
+            this.q1 = q1;
+            this.q2 = q2;
+            this.q3 = q3;
+        }
+
+        // https://danceswithcode.net/engineeringnotes/quaternions/quaternions.html
+        public Matrix getRotationMatrix() {
+            return new Matrix(new double[][] {
+                {1 - 2 * q2 * q2 - 2 * q3 * q3, 2 * q1 * q2 - 2 * q0 * q3, 2 * q1 * q3 + 2 * q0 * q2},
+                {2 * q1 * q2 + 2 * q0 * q3, 1 - 2 * q1 * q1 - 2 * q3 * q3, 2 * q2 * q3 - 2 * q0 * q1},
+                {2 * q1 * q3 - 2 * q0 * q2, 2 * q2 * q3 + 2 * q0 * q1, 1 - 2 * q1 * q1 - 2 * q2 * q2},
+            });
+        }
     }
 }
