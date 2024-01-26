@@ -1,5 +1,7 @@
 package ray;
 
+import java.awt.Color;
+
 public class Vector3 {
     public final double x;
     public final double y;
@@ -46,6 +48,11 @@ public class Vector3 {
 
     public Vector3 normalized() {
         return mult(1 / len());
+    }
+
+    // FUTURE SELF: The bug is that the ray is pointing in one direction but moving backwards 😊 good luck
+    public Vector3 flip() {
+        return null;
     }
 
     public double len() {
@@ -122,6 +129,32 @@ public class Vector3 {
         Vector3 v = new Vector3(0, 1, 0);
         Vector3 newV = v.rotateZ(Math.PI);
         System.out.println(newV);
+    }
+
+    public Vector3(Color color) {
+        this.x = color.getRed() / 255.0;
+        this.y = color.getGreen() / 255.0;
+        this.z = color.getBlue() / 255.0;
+    }
+
+    public Color toColor() {
+        return new Color((int) Math.min(255, this.x * 255), (int) Math.min(255, this.y * 255), (int) Math.min(255, this.z * 255));
+    }
+
+    public Vector3 mash(Vector3 other) {
+        return new Vector3(x * other.x, y * other.y, z * other.z);
+    }
+
+    public static Vector3 average(Vector3[] vectors) {
+        double x0 = 0;
+        double x1 = 0;
+        double x2 = 0;
+        for (Vector3 vector : vectors) {
+            x0 += vector.x;
+            x1 += vector.y;
+            x2 += vector.z;
+        }
+        return new Vector3(x0 / vectors.length, x1 / vectors.length, x2 / vectors.length);
     }
 
     class Quaternion {

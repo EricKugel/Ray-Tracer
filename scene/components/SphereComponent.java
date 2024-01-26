@@ -1,15 +1,19 @@
 package scene.components;
 
+import java.awt.Color;
+
 import ray.*;
 import scene.*;
 
 public class SphereComponent implements SceneComponent {
     private Vector3 center;
     private double radius;
+    public Texture texture;
 
-    public SphereComponent(Vector3 center, double radius) {
+    public SphereComponent(Vector3 center, double radius, Texture texture) {
         this.center = center;
         this.radius = radius;
+        this.texture = texture;
     }
 
     public void translate(Vector3 offset) {
@@ -39,12 +43,12 @@ public class SphereComponent implements SceneComponent {
         double time = Math.min(t_0, t_1);
         Vector3 point = ray.origin.add(ray.dir.mult(time));
         Vector3 normal = point.sub(center).normalized();
-        return new Intersection(time, point, normal);
+        return new Intersection(time, point, normal, this.texture);
     }
 
     public static void main(String[] arg0) {
         Ray ray = new Ray(new Vector3(0, 0, 0), new Vector3(1, 0, 0));
-        SphereComponent sphere = new SphereComponent(new Vector3(5, 3, 0), 2);
+        SphereComponent sphere = new SphereComponent(new Vector3(5, 3, 0), 2, new Texture(Color.GREEN));
         System.out.println(sphere.intersect(ray));
     }
 }

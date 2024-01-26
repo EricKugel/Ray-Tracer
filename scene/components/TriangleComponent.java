@@ -1,9 +1,7 @@
 package scene.components;
 
-import ray.Intersection;
-import ray.Ray;
-import ray.Vector3;
-import scene.SceneComponent;
+import ray.*;
+import scene.*;
 
 public class TriangleComponent implements SceneComponent {
     private Vector3 v0;
@@ -14,8 +12,9 @@ public class TriangleComponent implements SceneComponent {
     private Vector3 edge2;
     private Vector3 normal;
     private double d;
+    public Texture texture;
 
-    public TriangleComponent(Vector3 v0, Vector3 v1, Vector3 v2) {
+    public TriangleComponent(Vector3 v0, Vector3 v1, Vector3 v2, Texture texture) {
         this.v0 = v0;
         this.v1 = v1;
         this.v2 = v2;
@@ -24,6 +23,7 @@ public class TriangleComponent implements SceneComponent {
         this.edge2 = v0.sub(v2);
         this.normal = edge0.cross(edge1);
         this.d = -v0.dot(normal);
+        this.texture = texture;
     }
 
     @Override
@@ -46,7 +46,8 @@ public class TriangleComponent implements SceneComponent {
 
         if (normal.dot(edge0.cross(point.sub(v0))) > 0 &&
             normal.dot(edge1.cross(point.sub(v1))) > 0 &&
-            normal.dot(edge2.cross(point.sub(v2))) > 0) return new Intersection(time, point, normal);
+            normal.dot(edge2.cross(point.sub(v2))) > 0) return new Intersection(time, point, normal, this.texture);
         return null;
+        // return new Intersection(time, point, normal, this.texture);
     }
 }
