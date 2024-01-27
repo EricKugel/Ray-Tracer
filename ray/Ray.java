@@ -6,7 +6,7 @@ import java.awt.Color;
 import java.util.random.RandomGenerator;
 
 public class Ray {
-    public static final int MAX_BOUNCES = 2;
+    public static final int MAX_BOUNCES = 4;
     public Vector3 origin;
     public Vector3 dir;
 

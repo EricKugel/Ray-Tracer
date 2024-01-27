@@ -52,7 +52,7 @@ public class Vector3 {
 
     // FUTURE SELF: The bug is that the ray is pointing in one direction but moving backwards 😊 good luck
     public Vector3 flip() {
-        return null;
+        return mult(-1);
     }
 
     public double len() {
@@ -155,6 +155,16 @@ public class Vector3 {
             x2 += vector.z;
         }
         return new Vector3(x0 / vectors.length, x1 / vectors.length, x2 / vectors.length);
+    }
+
+    public Vector3 getX() {
+        return new Vector3(this.x, 0, 0);
+    }
+    public Vector3 getY() {
+        return new Vector3(0, this.y, 0);
+    }
+    public Vector3 getZ() {
+        return new Vector3(0, 0, this.z);
     }
 
     class Quaternion {

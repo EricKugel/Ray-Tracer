@@ -22,19 +22,23 @@ public class Controller {
         SphereComponent s1 = new SphereComponent(new Vector3(0, 0, 30), 3, new Texture(new Color(59, 83, 84)));
         SphereComponent s2 = new SphereComponent(new Vector3(4, 0, 30), 3, new Texture(Color.PINK));
 
+        BoxMeshComponent b0 = new BoxMeshComponent(new Vector3(-8, -1, 20), new Vector3(8, 1, 30), new Texture(Color.GREEN));
+
         // TriangleComponent floor = new TriangleComponent(new Vector3(-10, 5, 30),
         //                                                 new Vector3(10, 5, 30), 
         //                                                 new Vector3(-10, 5, 40), new Texture(Color.GREEN, 1));
         // scene.add(floor);
         SphereComponent floor = new SphereComponent(new Vector3(0, -40, 30), 38.5, new Texture(Color.WHITE));
-        SphereComponent sun = new SphereComponent(new Vector3(0, 30, 0), 10, new Texture(Color.WHITE, 20));
+        SphereComponent sun = new SphereComponent(new Vector3(0, 30, 0), 10, new Texture(Color.WHITE, 50));
         scene.add(sun);
 
-        scene.add(s0);
-        scene.add(s1);
-        scene.add(s2);
+        // scene.add(s0);
+        // scene.add(s1);
+        // scene.add(s2);
 
-        scene.add(floor);
+        scene.add(b0);
+
+        // scene.add(floor);
 
         // TriangleComponent tri = new TriangleComponent(new Vector3(0, 4, 30),
         //                                                 new Vector3(-4, 0, 30), 
@@ -49,14 +53,16 @@ public class Controller {
         // scene.add(new SphereComponent(new Vector3(0, 2, 5), 1));
         // scene.add(new SphereComponent(new Vector3(0, 2.5, 5), 1));
 
-        ProgressiveDisplay display = new ProgressiveDisplay();
-        for (int i = 1; i <= Camera.RESOLUTION; i++) {
-            // , i, Camera.RESOLUTION
-            display.show(camera.getLayer(scene));
-            // break;
-            // System.out.println(i);
-        }
-        System.out.println("Done!");
+        // ProgressiveDisplay display = new ProgressiveDisplay();
+        // for (int i = 1; i <= Camera.RESOLUTION; i++) {
+        //     // , i, Camera.RESOLUTION
+        //     display.show(camera.getLayer(scene));
+        //     // break;
+        //     // System.out.println(i);
+        // }
+        // System.out.println("Done!");
+        Display display = new Display();
+        display.show(camera.getFrame(scene));
 
         // Timer timer = new Timer(1000 / 24, new ActionListener() {
         //     public void actionPerformed(ActionEvent e) {

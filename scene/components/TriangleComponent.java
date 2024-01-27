@@ -26,6 +26,19 @@ public class TriangleComponent implements SceneComponent {
         this.texture = texture;
     }
 
+    public TriangleComponent(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 normal, Texture texture) {
+        this.v0 = v0;
+        this.v1 = v1;
+        this.v2 = v2;
+        this.edge0 = v1.sub(v0);
+        this.edge1 = v2.sub(v1);
+        this.edge2 = v0.sub(v2);
+        this.normal = edge0.cross(edge1);
+        this.normal = this.normal.align(normal);
+        this.d = -v0.dot(normal);
+        this.texture = texture;
+    }
+
     @Override
     public void translate(Vector3 vector) {
         v0 = v0.add(vector);
@@ -35,8 +48,11 @@ public class TriangleComponent implements SceneComponent {
 
     @Override
     public Intersection intersect(Ray ray) {
-        if (ray.dir.dot(normal) == 0) {
+        double dotValue = ray.dir.dot(normal);
+        if (dotValue == 0) {
             return null;
+        } else if (dotValue < 0) {
+            // normal = normal.flip();
         }
         double time = -(normal.dot(ray.origin) + d) / normal.dot(ray.dir);
         if (time <= 0) {
