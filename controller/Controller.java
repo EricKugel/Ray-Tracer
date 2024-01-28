@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+import org.w3c.dom.Text;
+
 public class Controller {
     private double tick;
     public Controller() {
@@ -18,9 +20,11 @@ public class Controller {
         Camera camera = new Camera(origin, new Vector3(0, 0, 30).sub(origin));
         
         SphereComponent s0 = new SphereComponent(new Vector3(-4, 0, 30), 3, new Texture(new Color(194, 148, 227)));
-    
-        SphereComponent s1 = new SphereComponent(new Vector3(0, 0, 30), 3, new Texture(new Color(59, 83, 84)));
-        SphereComponent s2 = new SphereComponent(new Vector3(4, 0, 30), 3, new Texture(Color.PINK));
+
+        // Texture.reflectorFactory(Color.WHITE, 1) new Texture(Color.RED)                 new Texture(Color.GREEN)
+        // Texture.reflectorFactory(Color.PINK, .5) new Texture(Color.RED)                 new Texture(Color.GREEN)
+        SphereComponent s1 = new SphereComponent(new Vector3(0, 0, 30), 3, Texture.reflectorFactory(Color.WHITE, 1));
+        SphereComponent s2 = new SphereComponent(new Vector3(4, 0, 30), 3, Texture.reflectorFactory(Color.WHITE, 1));
 
         BoxMeshComponent b0 = new BoxMeshComponent(new Vector3(-8, -1, 20), new Vector3(8, 1, 30), new Texture(Color.GREEN));
 
@@ -28,17 +32,17 @@ public class Controller {
         //                                                 new Vector3(10, 5, 30), 
         //                                                 new Vector3(-10, 5, 40), new Texture(Color.GREEN, 1));
         // scene.add(floor);
-        SphereComponent floor = new SphereComponent(new Vector3(0, -40, 30), 38.5, new Texture(Color.WHITE));
-        SphereComponent sun = new SphereComponent(new Vector3(0, 30, 0), 10, new Texture(Color.WHITE, 50));
+        SphereComponent floor = new SphereComponent(new Vector3(0, -43, 30), 38.5, new Texture(Color.WHITE));
+        SphereComponent sun = new SphereComponent(new Vector3(0, 30, 0), 10, new Texture(Color.WHITE, 20));
         scene.add(sun);
 
-        // scene.add(s0);
+        scene.add(s0);
         // scene.add(s1);
-        // scene.add(s2);
+        scene.add(s2);
 
-        scene.add(b0);
+        // scene.add(b0);
 
-        // scene.add(floor);
+        scene.add(floor);
 
         // TriangleComponent tri = new TriangleComponent(new Vector3(0, 4, 30),
         //                                                 new Vector3(-4, 0, 30), 

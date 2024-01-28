@@ -17,7 +17,7 @@ public class Camera {
     public static final Vector3 ORIGINAL_DIR = new Vector3(0, 0, 1);
 
     // rays/pixel
-    public static final int RESOLUTION = 300;
+    public static final int RESOLUTION = 1000;
 
     public Vector3 origin;
     public Vector3 dir;

@@ -6,7 +6,8 @@ import java.awt.Color;
 import java.util.random.RandomGenerator;
 
 public class Ray {
-    public static final int MAX_BOUNCES = 4;
+    public static final int MAX_BOUNCES = 3;
+    public static final Vector3 UP = new Vector3(0, 1, 0);
     public Vector3 origin;
     public Vector3 dir;
 
@@ -30,6 +31,15 @@ public class Ray {
         return angle;
     }
 
+    public Vector3 shinyAngle(Intersection i) {
+        return i.normal.rotate(this.dir.flip().getRotationMatrix(i.normal));
+    }
+
+    public Vector3 getEnvironment(Vector3 color, Vector3 light) {
+        Vector3 envColor = new Vector3(dir.dot(UP) <= 0 ? Color.GREEN : Color.WHITE);
+        return light.add(envColor.mash(color).mult(.4));
+    }
+
     public Vector3 doYoThang(Scene scene) {
         Vector3 color = new Vector3(Color.WHITE);
         Vector3 light = new Vector3(Color.BLACK);
@@ -45,7 +55,10 @@ public class Ray {
                     }
                 }
             }
-            if (mintersection == null) break;
+            if (mintersection == null) { 
+                return getEnvironment(color, light);
+            }
+            
             
             Vector3 emittedLight = new Vector3(mintersection.texture.emissionColor).mult(mintersection.texture.luminosity);
             light = light.add(emittedLight.mash(color));
@@ -53,7 +66,7 @@ public class Ray {
 
 
             this.origin = mintersection.origin;
-            this.dir = randomAngle(mintersection).normalized();
+            this.dir = random.nextDouble() > mintersection.texture.shininess ? randomAngle(mintersection).normalized() : shinyAngle(mintersection).normalized();
         }
         return light;
     }
