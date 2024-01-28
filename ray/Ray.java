@@ -56,7 +56,8 @@ public class Ray {
                 }
             }
             if (mintersection == null) { 
-                return getEnvironment(color, light);
+                // return getEnvironment(color, light);
+                break;
             }
             
             

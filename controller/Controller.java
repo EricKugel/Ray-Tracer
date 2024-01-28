@@ -16,14 +16,14 @@ public class Controller {
     private double tick;
     public Controller() {
         Scene scene = new Scene();
-        Vector3 origin = new Vector3(0, 10, -5);
+        Vector3 origin = new Vector3(0, 20, -15);
         Camera camera = new Camera(origin, new Vector3(0, 0, 30).sub(origin));
         
-        SphereComponent s0 = new SphereComponent(new Vector3(-4, 0, 30), 3, new Texture(new Color(194, 148, 227)));
+        SphereComponent s0 = new SphereComponent(new Vector3(-4, 0, 30), 3, Texture.reflectorFactory(Color.WHITE, 1));
 
         // Texture.reflectorFactory(Color.WHITE, 1) new Texture(Color.RED)                 new Texture(Color.GREEN)
         // Texture.reflectorFactory(Color.PINK, .5) new Texture(Color.RED)                 new Texture(Color.GREEN)
-        SphereComponent s1 = new SphereComponent(new Vector3(0, 0, 30), 3, Texture.reflectorFactory(Color.WHITE, 1));
+        SphereComponent s1 = new SphereComponent(new Vector3(0, 6, 30), 3, Texture.reflectorFactory(new Color(105, 78, 0), 1));
         SphereComponent s2 = new SphereComponent(new Vector3(4, 0, 30), 3, Texture.reflectorFactory(Color.WHITE, 1));
 
         BoxMeshComponent b0 = new BoxMeshComponent(new Vector3(-8, -1, 20), new Vector3(8, 1, 30), new Texture(Color.GREEN));
@@ -33,11 +33,23 @@ public class Controller {
         //                                                 new Vector3(-10, 5, 40), new Texture(Color.GREEN, 1));
         // scene.add(floor);
         SphereComponent floor = new SphereComponent(new Vector3(0, -43, 30), 38.5, new Texture(Color.WHITE));
-        SphereComponent sun = new SphereComponent(new Vector3(0, 30, 0), 10, new Texture(Color.WHITE, 20));
+        SphereComponent sun = new SphereComponent(new Vector3(0, 0, 30), .5, new Texture(Color.GREEN, 200, Color.GREEN));
+        SphereComponent sunA = new SphereComponent(new Vector3(-10, 0, 30), .5, new Texture(Color.RED, 200, Color.RED));
+        SphereComponent sunB = new SphereComponent(new Vector3(10, 0, 30), .5, new Texture(Color.BLUE, 200, Color.BLUE));
+        SphereComponent sun1 = new SphereComponent(new Vector3(60, 30, 0), 10, new Texture(Color.WHITE, 15));
+        SphereComponent sun2 = new SphereComponent(new Vector3(-60, 30, 0), 10, new Texture(Color.WHITE, 15));
+        SphereComponent sun3 = new SphereComponent(new Vector3(0, 90, 0), 10, new Texture(Color.WHITE, 15));
+        SphereComponent sun4 = new SphereComponent(new Vector3(0, -90, 0), 10, new Texture(Color.WHITE, 15));
         scene.add(sun);
+        scene.add(sun1);
+        scene.add(sun2);
+        scene.add(sun3);
+        scene.add(sun4);
+        scene.add(sunA);
+        scene.add(sunB);
 
         scene.add(s0);
-        // scene.add(s1);
+        scene.add(s1);
         scene.add(s2);
 
         // scene.add(b0);
